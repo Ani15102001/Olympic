@@ -4,7 +4,10 @@ from pathlib import Path
 import numpy as np
 import plotly.graph_objects as go
 import base64
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageFile
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+from io import BytesIO
 
 import pandas as pd
 import streamlit as st
@@ -1187,9 +1190,11 @@ def noc_flag_html(noc, height=34):
     noc = str(noc).upper().strip()
 
     noc_to_country = {
+        # Main / current countries
         "USA": "us",
         "FRA": "fr",
         "GBR": "gb",
+        "ARG": "ar",
         "ITA": "it",
         "SWE": "se",
         "GER": "de",
@@ -1207,7 +1212,6 @@ def noc_flag_html(noc, height=34):
         "KOR": "kr",
         "BRA": "br",
         "RUS": "ru",
-        "URS": "su",
         "HUN": "hu",
         "POL": "pl",
         "ROU": "ro",
@@ -1221,6 +1225,134 @@ def noc_flag_html(noc, height=34):
         "KEN": "ke",
         "ETH": "et",
         "RSA": "za",
+
+        # Europe
+        "POR": "pt",
+        "IRL": "ie",
+        "ISL": "is",
+        "LUX": "lu",
+        "LIE": "li",
+        "MON": "mc",
+        "AND": "ad",
+        "SMR": "sm",
+        "MLT": "mt",
+        "CYP": "cy",
+        "TUR": "tr",
+        "CZE": "cz",
+        "SVK": "sk",
+        "CRO": "hr",
+        "SRB": "rs",
+        "SLO": "si",
+        "BIH": "ba",
+        "MNE": "me",
+        "MKD": "mk",
+        "ALB": "al",
+        "BUL": "bg",
+        "UKR": "ua",
+        "BLR": "by",
+        "LTU": "lt",
+        "LAT": "lv",
+        "EST": "ee",
+        "MDA": "md",
+        "GEO": "ge",
+        "ARM": "am",
+        "AZE": "az",
+
+        # Americas
+        "CHI": "cl",
+        "COL": "co",
+        "PER": "pe",
+        "URU": "uy",
+        "VEN": "ve",
+        "ECU": "ec",
+        "PAR": "py",
+        "BOL": "bo",
+        "CRC": "cr",
+        "PAN": "pa",
+        "GUA": "gt",
+        "HON": "hn",
+        "ESA": "sv",
+        "NCA": "ni",
+        "DOM": "do",
+        "PUR": "pr",
+        "TTO": "tt",
+        "BAH": "bs",
+        "BAR": "bb",
+        "BER": "bm",
+        "GUY": "gy",
+        "SUR": "sr",
+        "HAI": "ht",
+
+        # Asia
+        "IND": "in",
+        "PAK": "pk",
+        "IRI": "ir",
+        "IRQ": "iq",
+        "ISR": "il",
+        "KSA": "sa",
+        "QAT": "qa",
+        "KUW": "kw",
+        "UAE": "ae",
+        "BRN": "bh",
+        "JOR": "jo",
+        "LBN": "lb",
+        "SYR": "sy",
+        "KAZ": "kz",
+        "UZB": "uz",
+        "KGZ": "kg",
+        "TJK": "tj",
+        "TKM": "tm",
+        "MGL": "mn",
+        "PRK": "kp",
+        "TPE": "tw",
+        "HKG": "hk",
+        "SIN": "sg",
+        "THA": "th",
+        "INA": "id",
+        "MAS": "my",
+        "PHI": "ph",
+        "VIE": "vn",
+        "MYA": "mm",
+        "SRI": "lk",
+        "BAN": "bd",
+        "NEP": "np",
+
+        # Africa
+        "EGY": "eg",
+        "MAR": "ma",
+        "ALG": "dz",
+        "TUN": "tn",
+        "NGR": "ng",
+        "GHA": "gh",
+        "UGA": "ug",
+        "TAN": "tz",
+        "ZIM": "zw",
+        "ZAM": "zm",
+        "CMR": "cm",
+        "CIV": "ci",
+        "SEN": "sn",
+        "NAM": "na",
+        "BOT": "bw",
+        "MOZ": "mz",
+        "ANG": "ao",
+        "MAD": "mg",
+        "MRI": "mu",
+
+        # Oceania
+        "NZL": "nz",
+        "FIJ": "fj",
+        "PNG": "pg",
+        "SAM": "ws",
+        "TGA": "to",
+
+        # Historical / special Olympic teams
+        "URS": "su",
+        "EUN": "ru",
+        "TCH": "cz",
+        "YUG": "rs",
+        "SCG": "rs",
+        "BOH": "cz",
+        "ANZ": "au",
     }
 
     if noc == "URS":
@@ -1238,9 +1370,11 @@ def noc_flag_url(noc):
     noc = str(noc).upper().strip()
 
     noc_to_country = {
+        # Main / current countries
         "USA": "us",
         "FRA": "fr",
         "GBR": "gb",
+        "ARG": "ar",
         "ITA": "it",
         "SWE": "se",
         "GER": "de",
@@ -1271,6 +1405,134 @@ def noc_flag_url(noc):
         "KEN": "ke",
         "ETH": "et",
         "RSA": "za",
+
+        # Europe
+        "POR": "pt",
+        "IRL": "ie",
+        "ISL": "is",
+        "LUX": "lu",
+        "LIE": "li",
+        "MON": "mc",
+        "AND": "ad",
+        "SMR": "sm",
+        "MLT": "mt",
+        "CYP": "cy",
+        "TUR": "tr",
+        "CZE": "cz",
+        "SVK": "sk",
+        "CRO": "hr",
+        "SRB": "rs",
+        "SLO": "si",
+        "BIH": "ba",
+        "MNE": "me",
+        "MKD": "mk",
+        "ALB": "al",
+        "BUL": "bg",
+        "UKR": "ua",
+        "BLR": "by",
+        "LTU": "lt",
+        "LAT": "lv",
+        "EST": "ee",
+        "MDA": "md",
+        "GEO": "ge",
+        "ARM": "am",
+        "AZE": "az",
+
+        # Americas
+        "CHI": "cl",
+        "COL": "co",
+        "PER": "pe",
+        "URU": "uy",
+        "VEN": "ve",
+        "ECU": "ec",
+        "PAR": "py",
+        "BOL": "bo",
+        "CRC": "cr",
+        "PAN": "pa",
+        "GUA": "gt",
+        "HON": "hn",
+        "ESA": "sv",
+        "NCA": "ni",
+        "DOM": "do",
+        "PUR": "pr",
+        "TTO": "tt",
+        "BAH": "bs",
+        "BAR": "bb",
+        "BER": "bm",
+        "GUY": "gy",
+        "SUR": "sr",
+        "HAI": "ht",
+
+        # Asia
+        "IND": "in",
+        "PAK": "pk",
+        "IRI": "ir",
+        "IRQ": "iq",
+        "ISR": "il",
+        "KSA": "sa",
+        "QAT": "qa",
+        "KUW": "kw",
+        "UAE": "ae",
+        "BRN": "bh",
+        "JOR": "jo",
+        "LBN": "lb",
+        "SYR": "sy",
+        "KAZ": "kz",
+        "UZB": "uz",
+        "KGZ": "kg",
+        "TJK": "tj",
+        "TKM": "tm",
+        "MGL": "mn",
+        "PRK": "kp",
+        "TPE": "tw",
+        "HKG": "hk",
+        "SIN": "sg",
+        "THA": "th",
+        "INA": "id",
+        "MAS": "my",
+        "PHI": "ph",
+        "VIE": "vn",
+        "MYA": "mm",
+        "SRI": "lk",
+        "BAN": "bd",
+        "NEP": "np",
+
+        # Africa
+        "EGY": "eg",
+        "MAR": "ma",
+        "ALG": "dz",
+        "TUN": "tn",
+        "NGR": "ng",
+        "GHA": "gh",
+        "UGA": "ug",
+        "TAN": "tz",
+        "ZIM": "zw",
+        "ZAM": "zm",
+        "CMR": "cm",
+        "CIV": "ci",
+        "SEN": "sn",
+        "NAM": "na",
+        "BOT": "bw",
+        "MOZ": "mz",
+        "ANG": "ao",
+        "MAD": "mg",
+        "MRI": "mu",
+
+        # Oceania
+        "NZL": "nz",
+        "FIJ": "fj",
+        "PNG": "pg",
+        "SAM": "ws",
+        "TGA": "to",
+
+        # Historical / special Olympic teams
+        "URS": "su",
+        "EUN": "ru",
+        "TCH": "cz",
+        "YUG": "rs",
+        "SCG": "rs",
+        "BOH": "cz",
+        "ANZ": "au",
     }
 
     if noc == "URS":
@@ -1921,14 +2183,22 @@ def olympic_podium_and_medal_wall(filtered_medals_df, selected_year):
 
 
 def fixed_opening_image(image_path, size=(900, 430)):
-    img = Image.open(image_path).convert("RGB")
-    img = ImageOps.fit(
-        img,
-        size,
-        method=Image.Resampling.LANCZOS,
-        centering=(0.5, 0.5)
-    )
-    return img
+    try:
+        img = Image.open(image_path).convert("RGB")
+
+        img = ImageOps.fit(
+            img,
+            size,
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5)
+        )
+
+        return img
+
+    except Exception as e:
+        st.warning(f"Image could not be loaded: {image_path}")
+        st.caption(f"Error: {e}")
+        return None
 
 # ============================================================
 # OPENING CEREMONY COMPARISON
@@ -2020,6 +2290,276 @@ def opening_ceremony_comparison():
             """,
             unsafe_allow_html=True
         )
+# ============================================================
+# OPENING CEREMONY FLIP BOOK
+# ============================================================
+
+def opening_ceremony_book():
+    memories = [
+        {
+            "year": "1896",
+            "city": "Athens",
+            "image": "images/opening_1896.jpg",
+            "title": "The first modern Olympic ceremony",
+            "text": "Athens 1896 marked the rebirth of the Olympic Games. The ceremony was solemn, simple and symbolic, strongly connected to ancient Greek tradition."
+        },
+        {
+            "year": "1906",
+            "city": "Athens",
+            "image": "images/opening_1906.jpg",
+            "title": "A return to the Olympic birthplace",
+            "text": "The 1906 Intercalated Games returned to Athens and reinforced the connection between the modern Olympic movement and Greece."
+        },
+        {
+            "year": "1920",
+            "city": "Antwerp",
+            "image": "images/opening_1920.jpg",
+            "title": "A ceremony after the war",
+            "text": "Antwerp 1920 carried a symbolic meaning of recovery, unity and international sport returning after World War I."
+        },
+        {
+            "year": "1932",
+            "city": "Los Angeles",
+            "image": "images/opening_1932.jpg",
+            "title": "The Olympic show begins to grow",
+            "text": "Los Angeles 1932 showed a stronger sense of spectacle and organization."
+        },
+        {
+            "year": "1952",
+            "city": "Helsinki",
+            "image": "images/opening_1952.jpg",
+            "title": "A northern Olympic memory",
+            "text": "Helsinki 1952 brought the Games to Finland in a new post-war international context."
+        },
+        {
+            "year": "1960",
+            "city": "Rome",
+            "image": "images/opening_1960.jpg",
+            "title": "Ancient history meets modern sport",
+            "text": "Rome 1960 connected the Olympic Games with classical architecture and ancient history."
+        },
+    ]
+
+    if "show_opening_book" not in st.session_state:
+        st.session_state.show_opening_book = False
+
+    if "opening_book_index" not in st.session_state:
+        st.session_state.opening_book_index = 0
+
+    st.markdown(
+        """
+        <div class="paper-panel">
+            <div class="panel-title-row">
+                <h2 class="panel-title">Opening Ceremony Memory Book</h2>
+                <span class="stamp">Album</span>
+            </div>
+            <p class="italic-desc">
+                Open the book and flip through Olympic Opening Ceremony memories.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    open_col1, open_col2, open_col3 = st.columns([1, 1.4, 1])
+
+    with open_col2:
+        if st.button(
+            "📖 Open / Close Memory Book",
+            key="toggle_opening_book",
+            width="stretch"
+        ):
+            st.session_state.show_opening_book = not st.session_state.show_opening_book
+            st.rerun()
+
+    if not st.session_state.show_opening_book:
+        return
+
+    current_index = st.session_state.opening_book_index
+    current_memory = memories[current_index]
+
+    image_path = Path(current_memory["image"])
+
+    if image_path.exists():
+        img = fixed_opening_image(image_path, size=(760, 500))
+
+        if img is not None:
+            img_buffer = BytesIO()
+            img.save(img_buffer, format="JPEG")
+            img_base64 = base64.b64encode(img_buffer.getvalue()).decode("utf-8")
+
+            image_html = f"""
+            <img src="data:image/jpeg;base64,{img_base64}" style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border: 1.5px solid #171717;
+            ">
+            """
+        else:
+            image_html = f"""
+            <div style="
+                height: 100%;
+                border: 1.5px dashed #171717;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: 'Roboto Mono', monospace;
+                color: #171717;
+                text-align: center;
+                padding: 20px;
+                box-sizing: border-box;
+            ">
+                Image exists but could not be loaded:<br>{current_memory["image"]}
+            </div>
+            """
+    else:
+        image_html = f"""
+        <div style="
+            height: 100%;
+            border: 1.5px dashed #171717;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto Mono', monospace;
+            color: #171717;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        ">
+            Missing image:<br>{current_memory["image"]}
+        </div>
+        """
+
+    st.html(
+        f"""
+        <div style="
+            max-width: 1120px;
+            margin: 26px auto 18px auto;
+            padding: 24px;
+            background: #171717;
+            box-shadow: 10px 10px 0px #b88a2e;
+            box-sizing: border-box;
+        ">
+            <div style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0;
+                min-height: 540px;
+            ">
+
+                <div style="
+                    background: #f4efe3;
+                    border: 2px solid #171717;
+                    border-right: 1px solid rgba(23,23,23,0.35);
+                    padding: 42px 38px;
+                    box-shadow: inset -18px 0px 28px rgba(0,0,0,0.10);
+                    position: relative;
+                    box-sizing: border-box;
+                ">
+                    <div style="
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 11px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.28em;
+                        color: #b88a2e;
+                        margin-bottom: 18px;
+                    ">
+                        Page {current_index + 1} / {len(memories)}
+                    </div>
+
+                    <div style="
+                        font-family: 'Playfair Display', serif;
+                        font-size: 58px;
+                        line-height: 0.95;
+                        color: #171717;
+                        margin-bottom: 10px;
+                    ">
+                        {current_memory["year"]}
+                    </div>
+
+                    <div style="
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 13px;
+                        text-transform: uppercase;
+                        letter-spacing: 0.22em;
+                        color: #68645c;
+                        margin-bottom: 34px;
+                    ">
+                        {current_memory["city"]} · Opening Ceremony
+                    </div>
+
+                    <div style="
+                        font-family: 'Playfair Display', serif;
+                        font-size: 34px;
+                        line-height: 1.1;
+                        color: #171717;
+                        margin-bottom: 18px;
+                    ">
+                        {current_memory["title"]}
+                    </div>
+
+                    <div style="
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 13px;
+                        line-height: 1.75;
+                        color: rgba(23,23,23,0.78);
+                    ">
+                        {current_memory["text"]}
+                    </div>
+
+                    <div style="
+                        position: absolute;
+                        bottom: 28px;
+                        left: 38px;
+                        right: 38px;
+                        border-top: 1px solid rgba(23,23,23,0.25);
+                        padding-top: 12px;
+                        font-family: 'Roboto Mono', monospace;
+                        font-size: 10px;
+                        letter-spacing: 0.22em;
+                        text-transform: uppercase;
+                        color: #68645c;
+                    ">
+                        Olympic Archive Memory Book
+                    </div>
+                </div>
+
+                <div style="
+                    background: #f4efe3;
+                    border: 2px solid #171717;
+                    border-left: 1px solid rgba(23,23,23,0.35);
+                    padding: 28px;
+                    box-shadow: inset 18px 0px 28px rgba(0,0,0,0.10);
+                    box-sizing: border-box;
+                ">
+                    <div style="
+                        height: 100%;
+                        background: rgba(255,255,255,0.18);
+                        padding: 12px;
+                        border: 1.5px solid rgba(23,23,23,0.35);
+                        box-sizing: border-box;
+                    ">
+                        {image_html}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        """
+    )
+
+    nav1, nav2, nav3 = st.columns([1, 1.4, 1])
+
+    with nav1:
+        if st.button("← Previous page", key="book_previous", width="stretch"):
+            st.session_state.opening_book_index = (current_index - 1) % len(memories)
+            st.rerun()
+
+    with nav3:
+        if st.button("Next page →", key="book_next", width="stretch"):
+            st.session_state.opening_book_index = (current_index + 1) % len(memories)
+            st.rerun()
 # ============================================================
 # OLYMPIC EVOLUTION CHART
 # ============================================================
@@ -4462,29 +5002,47 @@ def show_host_city_cartography(df):
             
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 # ============================================================
 # CURIOSITIES PAGE
 # ============================================================
 
 def show_curiosities_page(df):
-    st.markdown('<div class="cartography-title">Olympic Curiosities</div>', unsafe_allow_html=True)
-    st.markdown('<div class="cartography-subtitle">◆ Opening Ceremony · 1896 vs 2016 ◆</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="cartography-title">Olympic Curiosities</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="cartography-subtitle">◆ Opening Ceremony · 1896 vs 2016 ◆</div>',
+        unsafe_allow_html=True
+    )
 
     back_col1, back_col2, back_col3 = st.columns([1.5, 1, 1.3])
 
     with back_col2:
-        if st.button("← Back to Olympic Archive", key="back_to_main_from_curiosities", width="stretch"):
+        if st.button(
+            "← Back to Olympic Archive",
+            key="back_to_main_from_curiosities",
+            width="stretch"
+        ):
             st.session_state.page = "main"
             st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # 1. Confronto statico 1896 vs 2016
     opening_ceremony_comparison()
     st.markdown("<br><br>", unsafe_allow_html=True)
 
+    # 2. Libro sfogliabile sotto il confronto
+    opening_ceremony_book()
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # 3. Grafici data stories
     olympic_evolution_chart(df)
     st.markdown("<br><br>", unsafe_allow_html=True)
+
+    # 4. Curiosità Melbourne-Stockholm 1956
     st.markdown(
         """
         <div class="medal-detail-card">
@@ -4498,7 +5056,6 @@ def show_curiosities_page(df):
         """,
         unsafe_allow_html=True
     )
-
 # ============================================================
 # MAIN
 # ============================================================
@@ -4676,3 +5233,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
